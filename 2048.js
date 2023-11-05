@@ -32,7 +32,6 @@ class Game {
         }
     }
 
-
     printMatrix() {
         console.log(this.matrix.map(row => row.join('\t')).join('\n'));
     }
@@ -82,11 +81,8 @@ class Game {
         if (prevMatrix !== JSON.stringify(this.matrix)) {
             this.addNumber(this.matrix);
 
-            // Verifica se a maior peça está no canto superior direito.
-            if (this.matrix[0][0] === this.highTile ||
-                this.matrix[3][0] === this.highTile ||
-                this.matrix[0][3] === this.highTile ||
-                this.matrix[3][3] === this.highTile) {
+            // Verifica se a maior peça está no canto inferior esquerdo
+            if (this.matrix[3][0] === this.highTile) {
                 this.score += this.highTile; // Bônus por manter a peça de maior valor no canto.
                 let sequenceScore = this.checkSequences(); // Verifica sequências e adiciona pontos baseados nelas.
                 this.score += sequenceScore;
@@ -236,7 +232,6 @@ class MonteCarloSearchTree {
         };
         this.simulationDepth = depth;
     }
-
     selectNode(node) {
         while (node.children.length !== 0) {
             node = node.children.reduce((prev, curr) => {
@@ -247,7 +242,6 @@ class MonteCarloSearchTree {
         }
         return node;
     }
-
     calculateUCT(node) {
         if (node.visits === 0) {
             return Infinity;
@@ -262,7 +256,6 @@ class MonteCarloSearchTree {
         console.log("-") */
         return uctValue;
     }
-
     expandNode(node) {
         // Assegurar que o nó não seja expandido se o jogo já estiver terminado
         if (!node.game.isAlive) {
@@ -294,7 +287,6 @@ class MonteCarloSearchTree {
             }
         });
     }
-
     simulateGame(node) {
         let simulatedGame = new Game(JSON.parse(JSON.stringify(node.game.matrix)), node.game.score, node.game.highTile, node.game.comboStreak);
 
@@ -327,7 +319,6 @@ class MonteCarloSearchTree {
         // Retorna o resultado da simulação com base na pontuação alcançada
         return node.bestScore;
     }
-
     backpropagate(node, result) {
         let currentNode = node;
 
@@ -348,7 +339,6 @@ class MonteCarloSearchTree {
             currentNode = currentNode.parent;
         }
     }
-
     bestMove() {
         let bestChild = null;
         let bestScore = -Infinity;
@@ -362,7 +352,6 @@ class MonteCarloSearchTree {
         });
         return bestChild.move;
     }
-
     runSearch(iterations) {
         for (let i = 0; i < iterations; i++) {
             let node = this.selectNode(this.root);
